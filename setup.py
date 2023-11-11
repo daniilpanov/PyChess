@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name='speedfile',
-    version='0.0.2',
+    version='0.0.3',
     author='SergeyLebidko',
     author_email='it.sergeyler@mail.ru',
     description='Simple Chess Library. Free to use',
