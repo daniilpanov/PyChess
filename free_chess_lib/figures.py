@@ -1,14 +1,19 @@
 import os
-import pygame
-from game_pack.params import *
+
+from free_chess_lib.boards import Board
+from free_chess_lib.params import *
 
 
-class Figure(pygame.sprite.Sprite):
+class Figure:
+    type: str
+    col: int
+    row: int
+    side: bool
+    board: Board
+    is_drop: bool
 
-    def __init__(self, filename, r, c, side, board):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(os.path.dirname(__file__) + '/' + filename).convert_alpha()
-        self.rect = self.image.get_rect(topleft=(c * CELL_SIZE, r * CELL_SIZE))
+    def __init__(self, _type, r: int, c: int, side, board):
+        self.type = _type
         self.row = r
         self.col = c
         self.side = side
@@ -18,8 +23,6 @@ class Figure(pygame.sprite.Sprite):
     def set_pos(self, r, c):
         self.row = r
         self.col = c
-        self.rect.left = c * CELL_SIZE
-        self.rect.top = r * CELL_SIZE
 
     @staticmethod
     def is_valid_pos(r, c):
@@ -32,7 +35,7 @@ class Figure(pygame.sprite.Sprite):
 class King(Figure):
 
     def __init__(self, r, c, side, board):
-        Figure.__init__(self, 'sprites/' + side + 'King.png', r, c, side, board)
+        Figure.__init__(self, 'k', r, c, side, board)
 
     def get_actions(self):
         result = []
@@ -52,7 +55,7 @@ class King(Figure):
 class Queen(Figure):
 
     def __init__(self, r, c, side, board):
-        Figure.__init__(self, 'sprites/' + side + 'Queen.png', r, c, side, board)
+        Figure.__init__(self, 'q', r, c, side, board)
 
     def get_actions(self):
         result = []
@@ -78,7 +81,7 @@ class Queen(Figure):
 class Rook(Figure):
 
     def __init__(self, r, c, side, board):
-        Figure.__init__(self, 'sprites/' + side + 'Rook.png', r, c, side, board)
+        Figure.__init__(self, 'r', r, c, side, board)
 
     def get_actions(self):
         result = []
@@ -104,7 +107,7 @@ class Rook(Figure):
 class Bishop(Figure):
 
     def __init__(self, r, c, side, board):
-        Figure.__init__(self, 'sprites/' + side + 'Bishop.png', r, c, side, board)
+        Figure.__init__(self, 'b', r, c, side, board)
 
     def get_actions(self):
         result = []
@@ -130,7 +133,7 @@ class Bishop(Figure):
 class Knight(Figure):
 
     def __init__(self, r, c, side, board):
-        Figure.__init__(self, 'sprites/' + side + 'Knight.png', r, c, side, board)
+        Figure.__init__(self, 'k', r, c, side, board)
 
     def get_actions(self):
         result = []
@@ -150,7 +153,7 @@ class Knight(Figure):
 class Pawn(Figure):
 
     def __init__(self, r, c, side, board):
-        Figure.__init__(self, 'sprites/' + side + 'Pawn.png', r, c, side, board)
+        Figure.__init__(self, 'p', r, c, side, board)
 
         # Выбираем направление движения пешки в зависимости от того, где находится её стартовая позиция
         if self.row == 1:

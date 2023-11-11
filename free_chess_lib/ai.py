@@ -1,5 +1,5 @@
 import random
-from game_pack.figures import *
+from free_chess_lib.figures import *
 import sys
 
 
@@ -48,7 +48,7 @@ class Ai:
         if d == 0:
             return self.board.position_evaluation()
 
-        op_side = OPPOSITE_SIDE[side]
+        op_side = not side
         avl_moves = self.board.get_all_avl_moves(op_side)
 
         # Обрабатываем особую ситуацию: нет доступных ходов, но король не находится под шахом

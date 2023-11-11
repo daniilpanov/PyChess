@@ -1,4 +1,4 @@
-from game_pack.figures import *
+from free_chess_lib.figures import *
 
 
 class Move:
@@ -14,9 +14,9 @@ class Move:
 
 class Board:
 
-    def __init__(self, pl_side):
+    def __init__(self, pl_side, fan: str | None = None):
         self.pl_side = pl_side
-        self.cmp_side = OPPOSITE_SIDE[pl_side]
+        self.cmp_side = not pl_side
 
         # Списки фигур игрока и компьютера
         self.pl_figures = []
@@ -52,17 +52,16 @@ class Board:
             self.cmp_figures.append(Pawn(1, i, self.cmp_side, self))
 
         # Создаем фигуры игрока
-        if self.pl_side == BLACK:
-            self.pl_king = King(7, 3, self.pl_side, self)
-            self.kings_dict[BLACK] = self.pl_king
-            self.pl_figures.append(self.pl_king)
-            self.pl_figures.append(Queen(7, 4, self.pl_side, self))
-
-        if self.pl_side == WHITE:
+        if self.pl_side:
             self.pl_king = King(7, 4, self.pl_side, self)
             self.kings_dict[WHITE] = self.pl_king
             self.pl_figures.append(self.pl_king)
             self.pl_figures.append(Queen(7, 3, self.pl_side, self))
+        else:
+            self.pl_king = King(7, 3, self.pl_side, self)
+            self.kings_dict[BLACK] = self.pl_king
+            self.pl_figures.append(self.pl_king)
+            self.pl_figures.append(Queen(7, 4, self.pl_side, self))
 
         self.pl_figures.append(Rook(7, 0, self.pl_side, self))
         self.pl_figures.append(Rook(7, 7, self.pl_side, self))
@@ -315,7 +314,7 @@ class Board:
             # Первое условие - король не должен до рокировки совершать ход
             if not self.was_move(figure):
                 # Второе условие - король не должен находится под шахом (то есть поле короля не должно быть "битым")
-                if not self.is_strike_cell(figure.row, figure.col, OPPOSITE_SIDE[figure.side]):
+                if not self.is_strike_cell(figure.row, figure.col, not figure.side):
 
                     # Проверяем возможность рокировки с ладьёй слева
                     l_rook = self.get_figure(figure.row, 0)
@@ -333,8 +332,7 @@ class Board:
                             allowed_cells_flag = True
                             for row_cell, col_cell in cell_list:
                                 figure_on_cell = self.get_figure(row_cell, col_cell)
-                                if figure_on_cell is not None or self.is_strike_cell(row_cell, col_cell,
-                                                                                     OPPOSITE_SIDE[figure.side]):
+                                if figure_on_cell is not None or self.is_strike_cell(row_cell, col_cell, not figure.side):
                                     allowed_cells_flag = False
                                     break
                             # Если все необходимые условия соблюдены, создаем рокировку
@@ -359,8 +357,7 @@ class Board:
                             allowed_cells_flag = True
                             for row_cell, col_cell in cell_list:
                                 figure_on_cell = self.get_figure(row_cell, col_cell)
-                                if figure_on_cell is not None or self.is_strike_cell(row_cell, col_cell,
-                                                                                     OPPOSITE_SIDE[figure.side]):
+                                if figure_on_cell is not None or self.is_strike_cell(row_cell, col_cell, not figure.side):
                                     allowed_cells_flag = False
                                     break
                             # Если все необходимые условия соблюдены, создаем рокировку
@@ -571,7 +568,7 @@ class Board:
 
     # Метод возвращает True, если фигрура находится под ударом фигур противоположной стороны
     def is_strike_figure(self, figure):
-        return self.is_strike_cell(figure.row, figure.col, OPPOSITE_SIDE[figure.side])
+        return self.is_strike_cell(figure.row, figure.col, not figure.side)
 
     # Метод возвращает True, если фигура уже ходила
     def was_move(self, figure):
