@@ -1,7 +1,5 @@
-import os
-
-from free_chess_lib.boards import Board
-from free_chess_lib.params import *
+from .boards import Board
+from .params import *
 
 
 class Figure:

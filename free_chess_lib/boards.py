@@ -1,4 +1,4 @@
-from free_chess_lib.figures import *
+from .figures import *
 
 
 class Move:
@@ -29,13 +29,12 @@ class Board:
         self.kings_dict = {}
 
         # Создаем фигуры компьютера
-        if self.cmp_side == WHITE:
+        if self.cmp_side:
             self.cmp_king = King(0, 3, self.cmp_side, self)
             self.kings_dict[WHITE] = self.cmp_king
             self.cmp_figures.append(self.cmp_king)
             self.cmp_figures.append(Queen(0, 4, self.cmp_side, self))
-
-        if self.cmp_side == BLACK:
+        else:
             self.cmp_king = King(0, 4, self.cmp_side, self)
             self.kings_dict[BLACK] = self.cmp_king
             self.cmp_figures.append(self.cmp_king)

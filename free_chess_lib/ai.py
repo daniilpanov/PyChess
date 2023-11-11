@@ -1,5 +1,5 @@
 import random
-from free_chess_lib.figures import *
+from .figures import *
 import sys
 
 
